@@ -20,10 +20,12 @@ public class Relations {
     public Relations() throws IOException {
         this.files = new HashSet<>();
         this.filesRelations = new HashMap<>();
+    }
+
+    public void createFilesRelations() {
         this.createFilesSet();
         this.findRelationsBetweenFiles();
     }
-
     private void createFilesSet() {
         final String rootPath = "src/main/java/codexpol";
         directory = new File(rootPath);
