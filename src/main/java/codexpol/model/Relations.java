@@ -11,8 +11,6 @@ import java.util.Map;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 
 public class Relations {
     private static File directory;
@@ -22,20 +20,8 @@ public class Relations {
     public Relations() throws IOException {
         this.files = new HashSet<>();
         this.filesRelations = new HashMap<>();
-        this.configureJavaParser();
         this.createFilesSet();
         this.findRelationsBetweenFiles();
-    }
-
-    private void configureJavaParser() throws IOException {
-        // stworzenie mapy wszystkich polaczen dla java parsera - wyeliminowanie bledow
-        // - wiecej info Michal
-        final String mavenPath = System.getProperty("java.class.path");
-        final CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
-        String[] path = mavenPath.split(";");
-        for (int i = 1; i < path.length; i++) {
-            combinedTypeSolver.add(new JarTypeSolver(path[i]));
-        }
     }
 
     private void createFilesSet() {
