@@ -15,19 +15,20 @@ import com.github.javaparser.ast.expr.Name;
 public class Relations {
     private static File directory;
     private HashSet<File> files;
-    private Map<String,String> filesRelations;
+    private Map<String, String> filesRelations;
 
     public Relations() throws IOException {
         this.files = new HashSet<>();
         this.filesRelations = new HashMap<>();
     }
 
-    public void createFilesRelations() {
-        this.createFilesSet();
-        this.findRelationsBetweenFiles();
+    public void createFilesRelations(String packageName, String rootPath) {
+        this.createFilesSet(rootPath);
+        this.findRelationsBetweenFiles(packageName);
+        System.out.println(this.filesRelations);
     }
-    private void createFilesSet() {
-        final String rootPath = "src/main/java/codexpol";
+
+    private void createFilesSet(String rootPath) {
         directory = new File(rootPath);
         this.findAllFiles(directory);
     }
@@ -42,13 +43,13 @@ public class Relations {
         });
     }
 
-    private void findRelationsBetweenFiles() {
+    private void findRelationsBetweenFiles(String packageName) {
         this.files.forEach(file -> {
             try {
                 CompilationUnit parsedFile = StaticJavaParser.parse(file);
                 parsedFile.getImports().stream().forEach(fileImport -> {
                     Name name = fileImport.getName();
-                    if (name.asString().startsWith("codexpol")) {
+                    if (name.asString().startsWith(packageName)) {
                         this.filesRelations.put(file.getName().split(".java")[0], name.getIdentifier());
                     }
                 });
